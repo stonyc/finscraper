@@ -33,6 +33,7 @@ cd $WORKDIR
 Create a new container with port-forwarding enabled on 7777:
 
 ```bash
+# To run the container in the background, exclude the --rm parameter:
 docker run -it --rm -v "$WORKDIR":/tmp -p 7777:7777 finscraper:latest
 ```
 

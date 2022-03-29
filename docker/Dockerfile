@@ -1,22 +1,24 @@
-FROM python:latest
+FROM ubuntu:20.04
 
-WORKDIR /tmp
+ENV DEBIAN_FRONTEND noninteractive
+
+# Install python3.8 and python-pip:
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    apt-get install -y python3.8 python3-pip nodejs npm
+# Link python3.8 to the python command:
+RUN ln -s /usr/bin/python3.8 /usr/local/bin/python
+
 # Install required packages:
+WORKDIR /home/finscraper
+RUN npm install -g configurable-http-proxy
 COPY src/requirements.txt ./
-RUN pip install -r requirements.txt
-
-# Prepare Jupyter Hub and add users to configuration file:
-RUN mkdir -p /etc/jupyterhub
-WORKDIR /etc/jupyterhub
-RUN jupyterhub --generate-config
-RUN echo "c.Authenticator.allowed_users = {'stonyc'}" >> jupyterhub_config.py
-RUN echo "c.Authenticator.admin_users = {'stonyc'}" >> jupyterhub_config.py
-RUN echo "c.Spawner.notebook_dir = '/tmp'" >> jupyterhub_config.py
-
-# Copy and enable the startup script:
-WORKDIR /tmp
+RUN pip install --upgrade pip && \
+    pip install -r requirements.txt
+    
+# Setup the startup script:
 COPY src/startup.sh ./
 RUN chmod +x startup.sh
 
 EXPOSE 7777
-ENTRYPOINT ["/bin/bash", /tmp/startup.sh"]
+ENTRYPOINT ["/bin/bash", "/home/finscraper/startup.sh"]
