@@ -1,8 +1,15 @@
+pandas
+numpy
+matplotlib
+plotly
+dash
+jupyterlab
+ipykernel
+requests
+lxml
 packaging>=20.9
 regex<2022.3.15
 yfinance
 pygooglenews
 newscatcher
-#feedparser
-#feedsearch
 newspaper3k
